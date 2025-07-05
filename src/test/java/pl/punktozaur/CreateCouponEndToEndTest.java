@@ -10,15 +10,15 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import pl.punktozaur.application.dto.CouponDto;
-import pl.punktozaur.application.dto.CreateLoyaltyAccountDto;
-import pl.punktozaur.application.dto.LoyaltyAccountDto;
-import pl.punktozaur.domain.LoyaltyPoints;
-import pl.punktozaur.domain.NominalValue;
-import pl.punktozaur.web.dto.ApiErrorResponse;
-import pl.punktozaur.web.dto.CreateCouponRequest;
-import pl.punktozaur.web.dto.ModifyPointsRequest;
-import pl.punktozaur.web.dto.NominalValueApi;
+import pl.punktozaur.common.ApiErrorResponse;
+import pl.punktozaur.common.LoyaltyPoints;
+import pl.punktozaur.coupon.application.dto.CouponDto;
+import pl.punktozaur.coupon.domain.NominalValue;
+import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
+import pl.punktozaur.coupon.web.dto.NominalValueApi;
+import pl.punktozaur.loyalty.CreateLoyaltyAccountDto;
+import pl.punktozaur.loyalty.LoyaltyAccountDto;
+import pl.punktozaur.loyalty.ModifyPointsRequest;
 
 import java.util.UUID;
 

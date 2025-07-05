@@ -8,12 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import pl.punktozaur.application.CouponService;
-import pl.punktozaur.application.dto.CouponDto;
-import pl.punktozaur.application.dto.CreateCouponDto;
-import pl.punktozaur.domain.CouponId;
-import pl.punktozaur.domain.NominalValue;
-import pl.punktozaur.web.dto.ApiErrorResponse;
+import pl.punktozaur.common.ApiErrorResponse;
+import pl.punktozaur.coupon.application.CouponService;
+import pl.punktozaur.coupon.application.dto.CouponDto;
+import pl.punktozaur.coupon.application.dto.CreateCouponDto;
+import pl.punktozaur.coupon.domain.CouponId;
+import pl.punktozaur.coupon.domain.NominalValue;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

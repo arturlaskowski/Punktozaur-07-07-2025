@@ -8,11 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import pl.punktozaur.application.dto.CouponDto;
-import pl.punktozaur.domain.LoyaltyPoints;
-import pl.punktozaur.domain.NominalValue;
-import pl.punktozaur.web.dto.CreateCouponRequest;
-import pl.punktozaur.web.dto.NominalValueApi;
+import pl.punktozaur.common.LoyaltyPoints;
+import pl.punktozaur.coupon.application.dto.CouponDto;
+import pl.punktozaur.coupon.domain.NominalValue;
+import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
+import pl.punktozaur.coupon.web.dto.NominalValueApi;
 
 import java.util.UUID;
 

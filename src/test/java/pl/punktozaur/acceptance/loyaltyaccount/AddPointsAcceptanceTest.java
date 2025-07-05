@@ -9,8 +9,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import pl.punktozaur.web.dto.ApiErrorResponse;
-import pl.punktozaur.web.dto.ModifyPointsRequest;
+import pl.punktozaur.common.ApiErrorResponse;
+import pl.punktozaur.loyalty.ModifyPointsRequest;
 
 import java.util.UUID;
 

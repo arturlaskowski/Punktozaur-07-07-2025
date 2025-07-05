@@ -2,10 +2,10 @@ package pl.punktozaur.acceptance.coupon;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.punktozaur.application.LoyaltyAccountService;
-import pl.punktozaur.application.dto.CreateLoyaltyAccountDto;
-import pl.punktozaur.domain.LoyaltyAccountId;
-import pl.punktozaur.domain.LoyaltyPoints;
+import pl.punktozaur.common.LoyaltyAccountId;
+import pl.punktozaur.common.LoyaltyPoints;
+import pl.punktozaur.loyalty.CreateLoyaltyAccountDto;
+import pl.punktozaur.loyalty.LoyaltyAccountService;
 
 import java.util.UUID;
 
