@@ -8,6 +8,7 @@ import pl.punktozaur.customer.application.dto.CreateCustomerDto;
 import pl.punktozaur.customer.application.dto.CustomerDto;
 import pl.punktozaur.customer.application.exception.CustomerAlreadyExistsException;
 import pl.punktozaur.customer.application.exception.CustomerNotFoundException;
+import pl.punktozaur.customer.application.integration.loyalty.LoyaltyServiceClient;
 import pl.punktozaur.customer.domain.Customer;
 import pl.punktozaur.domain.CustomerId;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final LoyaltyServiceClient loyaltyServiceClient;
 
     public CustomerDto getCustomer(UUID id) {
         CustomerId customerId = new CustomerId(id);
@@ -32,8 +34,11 @@ public class CustomerService {
         if (customerRepository.existsByEmail(customerDto.email())) {
             throw new CustomerAlreadyExistsException(customerDto.email());
         }
-        
+
         var customer = new Customer(customerDto.firstName(), customerDto.lastName(), customerDto.email());
-        return customerRepository.save(customer).getCustomerId();
+        CustomerId customerId = customerRepository.save(customer).getCustomerId();
+        loyaltyServiceClient.createLoyaltyAccount(customerId);
+
+        return customerId;
     }
 }

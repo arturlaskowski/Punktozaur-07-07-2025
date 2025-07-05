@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.punktozaur.coupon.application.exception.CouponNotFoundException;
+import pl.punktozaur.coupon.application.exception.LoyaltyPointsSubtractionException;
 import pl.punktozaur.coupon.application.exception.PointsNotSubtractedException;
 import pl.punktozaur.coupon.domain.exception.CouponNotActiveException;
 import pl.punktozaur.coupon.domain.exception.UnauthorizedCouponAccessException;
@@ -36,5 +37,16 @@ public class CouponRestApiExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleException(UnauthorizedCouponAccessException ex) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(ex.getMessage());
         return new ResponseEntity<>(apiErrorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = LoyaltyPointsSubtractionException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(LoyaltyPointsSubtractionException ex) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(ex.getMessage());
+        if (ex.getReason() == LoyaltyPointsSubtractionException.Reason.CLIENT_ERROR) {
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
+        } else if (ex.getReason() == LoyaltyPointsSubtractionException.Reason.SERVER_ERROR) {
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_GATEWAY);
+        }
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.CONFLICT);
     }
 }

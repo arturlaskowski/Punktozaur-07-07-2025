@@ -9,6 +9,7 @@ import pl.punktozaur.coupon.application.dto.CouponDto;
 import pl.punktozaur.coupon.application.dto.CreateCouponDto;
 import pl.punktozaur.coupon.application.dto.RedeemCouponDto;
 import pl.punktozaur.coupon.application.exception.CouponNotFoundException;
+import pl.punktozaur.coupon.application.integration.loyalty.LoyaltyServiceClient;
 import pl.punktozaur.coupon.application.repository.CouponRepository;
 import pl.punktozaur.coupon.domain.Coupon;
 import pl.punktozaur.coupon.domain.CouponId;
@@ -20,14 +21,18 @@ import pl.punktozaur.domain.LoyaltyAccountId;
 public class CouponService {
 
     private final CouponRepository couponRepository;
+    private final LoyaltyServiceClient loyaltyServiceClient;
 
     @Transactional
     public CouponId createCoupon(CreateCouponDto dto) {
         var loyaltyAccountId = new LoyaltyAccountId(dto.loyaltyAccountId());
         var coupon = new Coupon(loyaltyAccountId, dto.nominalValue());
         var requiredPoints = dto.nominalValue().getRequiredPoints();
+        var couponId = couponRepository.save(coupon).getId();
 
-        return couponRepository.save(coupon).getId();
+        loyaltyServiceClient.subtractPoints(loyaltyAccountId, requiredPoints);
+
+        return couponId;
     }
 
     @Transactional

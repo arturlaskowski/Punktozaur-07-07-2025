@@ -6,7 +6,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pl.punktozaur.customer.application.CustomerService;
+import pl.punktozaur.customer.application.integration.loyalty.LoyaltyServiceClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -16,6 +18,9 @@ import pl.punktozaur.customer.application.CustomerService;
         "eureka.client.fetch-registry=false"
 })
 abstract class BaseAcceptanceTest {
+
+    @MockitoBean
+    protected LoyaltyServiceClient loyaltyServiceClient;
 
     @LocalServerPort
     protected int port;
