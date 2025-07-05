@@ -1,17 +1,27 @@
-# punktozaur - Zadanie 2
+# punktozaur - Zadanie 2.1
 
-Używając Feign Client zaimplementuj komunikację synchroniczną między usługami.
-Wymagania są następujące:
-* Podczas tworzenia klienta (endpoint `/coupons`) ma się utworzyć konto lojalnościowe.
-* Podczas tworzenia kuponu mają zostać odjęte punkty z konta lojalnościowego. Jeśli brakuje punktów lub konto nie istnieje, kupon nie może zostać utworzony.
+Zaimplementuj testy kontraktowe dla komunikacji po REST API.
 
-Wszystkie zależności są już dodane, więc nie trzeba nic zmieniać w `pom.xml`.
-Po implementacji pamiętaj o dostosowaniu testów. W testach są klasy `BaseAcceptanceTest`, w nich wystarczy dodać mock dla wywołania zewnętrznej usługi.
+## Przygotowanie
 
-Żeby zweryfikować, czy implementacja jest prawidłowa, odpal wszystkie mikroserwisy, zaczekaj około 30 sekund (rejestracja w Eurece),
-a następnie uruchom test [End to End](./coupon-service/src/test/java/pl/punktozaur/coupon/CreateCouponEndToEndTest.java).
-Oczywiście w taki sposób nie testuje się relacji między usługami, ten test jest tylko po to, żeby sprawdzić, czy udało się wykonać zadanie.
+W plikach `pom.xml` zostały już dodane zależności do testów kontraktowych, więc nie musisz nic zmieniać.
 
-Do twojej dyspozycji jest kolekcja Postman, żeby poweryfikować różne scenariusze.
+## Implementacja
+
+Na start zaimplementuj [ContractTestBase](./loyalty-service/src/test/java/pl/punktozaur/loyalty/contracts/ContractTestBase.java).
+Definiuje jak aplikacja ma odpowiadać na żądania opisane w kontraktach.
+
+Następnie utwórz kontrakty.
+
+## Uwagi techniczne
+
+Jeśli robisz `@AutoConfigureStubRunner` podając nazwę `stubs` to odwołujesz się do jar z innego mikroserwisu, on musi istnieć. 
+Wcześniej w mikroserwisie, który ma go stworzyć, możesz użyć komendy `maven package`.
+
+## Weryfikacja
+
+Po implementacji kontraktów zweryfikuj ich działanie:
+- Zmieniając nazwę jakiegoś pola u dostawcy - test powinien się wysypać
+- Zmieniając nazwę pola u odbiorcy - test powinien się wysypać
 
 ### Powodzenia!
