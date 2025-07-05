@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-record CreateLoyaltyAccountRequest(
+public record CreateLoyaltyAccountRequest(
         @NotNull UUID customerId) {
 }

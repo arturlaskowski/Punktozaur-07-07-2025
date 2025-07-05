@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "loyalty-service")
-interface LoyaltyServiceFeignClient {
+public interface LoyaltyServiceFeignClient {
 
     @PostMapping("/loyalty-accounts")
     void createLoyaltyAccount(@RequestBody CreateLoyaltyAccountRequest request);
