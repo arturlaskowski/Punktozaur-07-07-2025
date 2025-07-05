@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.UUID;
 
 @FeignClient(name = "loyalty-service")
-interface LoyaltyServiceFeignClient {
+public interface LoyaltyServiceFeignClient {
 
     @PostMapping("/loyalty-accounts/{loyaltyAccount}/subtract-points")
     void subtractPoints(@PathVariable UUID loyaltyAccount, @RequestBody SubtractPointsRequest request);

@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.punktozaur.coupon.application.integration.loyalty.LoyaltyServiceClient;
+import pl.punktozaur.coupon.application.integration.loyalty.LoyaltyServiceFeignClient;
+import pl.punktozaur.coupon.application.integration.loyalty.SubtractPointsRequest;
 import pl.punktozaur.domain.LoyaltyAccountId;
 import pl.punktozaur.domain.LoyaltyPoints;
 
@@ -27,15 +28,16 @@ import static org.springframework.cloud.contract.stubrunner.spring.StubRunnerPro
 class LoyaltyServiceContractTest {
 
     @Autowired
-    private LoyaltyServiceClient loyaltyServiceClient;
+    private LoyaltyServiceFeignClient loyaltyServiceFeignClient;
 
     @Test
     void shouldNotThrowExceptionWhenSubtractPoints() {
         LoyaltyAccountId accountId = LoyaltyAccountId.newOne();
         LoyaltyPoints pointsToSubtract = new LoyaltyPoints(100);
+        var subtractPointsRequest = new SubtractPointsRequest(pointsToSubtract.points());
 
         assertDoesNotThrow(() ->
-                loyaltyServiceClient.subtractPoints(accountId, pointsToSubtract)
+                loyaltyServiceFeignClient.subtractPoints(accountId.id(), subtractPointsRequest)
         );
     }
 }
