@@ -1,0 +1,327 @@
+{
+	"info": {
+		"_postman_id": "3f0e7dc7-06d7-45ee-b68e-b85240c765b1",
+		"name": "Punktozaur-2",
+		"description": "Postman collection for all endpoints in the Punktozaur microservices application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5840429"
+	},
+	"item": [
+		{
+			"name": "customer",
+			"item": [
+				{
+					"name": "Customer Service - Get Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{customer_service_url}}/customers/{{customerId}}",
+							"host": [
+								"{{customer_service_url}}"
+							],
+							"path": [
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer Service - Add Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseHeader = pm.response.headers.get('Location');",
+									"if (responseHeader) {",
+									"    var customerId = responseHeader.split('/').pop();",
+									"    pm.environment.set(\"customerId\", customerId);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jan\",\n  \"lastName\": \"Kowalski\",\n  \"email\": \"jan.kowalski@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{customer_service_url}}/customers",
+							"host": [
+								"{{customer_service_url}}"
+							],
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "coupon",
+			"item": [
+				{
+					"name": "Coupon Service - Create Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loyaltyAccountId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"nominalValue\": \"TEN\"\n}"
+						},
+						"url": {
+							"raw": "{{coupon_service_url}}/coupons",
+							"host": [
+								"{{coupon_service_url}}"
+							],
+							"path": [
+								"coupons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Coupon Service - Redeem Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loyaltyAccountId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}"
+						},
+						"url": {
+							"raw": "{{coupon_service_url}}/coupons/{{couponId}}/redeem",
+							"host": [
+								"{{coupon_service_url}}"
+							],
+							"path": [
+								"coupons",
+								"{{couponId}}",
+								"redeem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Coupon Service - Get Coupon",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{coupon_service_url}}/coupons/{{couponId}}",
+							"host": [
+								"{{coupon_service_url}}"
+							],
+							"path": [
+								"coupons",
+								"{{couponId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "loyalty",
+			"item": [
+				{
+					"name": "Loyalty Service - Create Loyalty Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}"
+						},
+						"url": {
+							"raw": "{{loyalty_service_url}}/loyalty-accounts",
+							"host": [
+								"{{loyalty_service_url}}"
+							],
+							"path": [
+								"loyalty-accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loyalty Service - Add Points",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"points\": 100\n}"
+						},
+						"url": {
+							"raw": "{{loyalty_service_url}}/loyalty-accounts/{{loyaltyAccountId}}/add-points",
+							"host": [
+								"{{loyalty_service_url}}"
+							],
+							"path": [
+								"loyalty-accounts",
+								"{{loyaltyAccountId}}",
+								"add-points"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loyalty Service - Subtract Points",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"points\": 50\n}"
+						},
+						"url": {
+							"raw": "{{loyalty_service_url}}/loyalty-accounts/{{loyaltyAccountId}}/subtract-points",
+							"host": [
+								"{{loyalty_service_url}}"
+							],
+							"path": [
+								"loyalty-accounts",
+								"{{loyaltyAccountId}}",
+								"subtract-points"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loyalty Service - Get Loyalty Account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{loyalty_service_url}}/loyalty-accounts/{{loyaltyAccountId}}",
+							"host": [
+								"{{loyalty_service_url}}"
+							],
+							"path": [
+								"loyalty-accounts",
+								"{{loyaltyAccountId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loyalty Service - Get Loyalty Accounts by Customer Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{loyalty_service_url}}/loyalty-accounts?customerId",
+							"host": [
+								"{{loyalty_service_url}}"
+							],
+							"path": [
+								"loyalty-accounts"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "loyalty_service_url",
+			"value": "http://localhost:8582"
+		},
+		{
+			"key": "customer_service_url",
+			"value": "http://localhost:8581"
+		},
+		{
+			"key": "coupon_service_url",
+			"value": "http://localhost:8583"
+		},
+		{
+			"key": "loyaltyAccountId",
+			"value": "123e4567-e89b-12d3-a456-426614174000"
+		},
+		{
+			"key": "customerId",
+			"value": "123e4567-e89b-12d3-a456-426614174001"
+		},
+		{
+			"key": "couponId",
+			"value": "123e4567-e89b-12d3-a456-426614174002"
+		}
+	]
+}

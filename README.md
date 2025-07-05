@@ -1,21 +1,17 @@
-# punktozaur - Zadanie 1
+# punktozaur - Zadanie 2
 
-Punktozaur to aplikacja, która pozwala zbierać punkty lojalnościowe i wymieniać je na kupony rabatowe.
+Używając Feign Client zaimplementuj komunikację synchroniczną między usługami.
+Wymagania są następujące:
+* Podczas tworzenia klienta (endpoint `/coupons`) ma się utworzyć konto lojalnościowe.
+* Podczas tworzenia kuponu mają zostać odjęte punkty z konta lojalnościowego. Jeśli brakuje punktów lub konto nie istnieje, kupon nie może zostać utworzony.
 
-## Zadanie
+Wszystkie zależności są już dodane, więc nie trzeba nic zmieniać w `pom.xml`.
+Po implementacji pamiętaj o dostosowaniu testów. W testach są klasy `BaseAcceptanceTest`, w nich wystarczy dodać mock dla wywołania zewnętrznej usługi.
 
-Twoim zadaniem jest oddzielenie modułu lojalnościowego (loyalty) od modułu kuponów (coupon).
-Po wykonaniu zadania powinny istnieć pakiety:
-* [pl.punktozaur.coupon](./src/main/java/pl/punktozaur/coupon)
-* [pl.punktozaur.loyalty](./src/main/java/pl/punktozaur/loyalty) (został już stworzony)
-* [pl.punktozaur.common](./src/main/java/pl/punktozaur/common) (tu powinny trafić tylko `ApiErrorResponse` i klasa z `@RestControllerAdvice`)
+Żeby zweryfikować, czy implementacja jest prawidłowa, odpal wszystkie mikroserwisy, zaczekaj około 30 sekund (rejestracja w Eurece),
+a następnie uruchom test [End to End](./coupon-service/src/test/java/pl/punktozaur/coupon/CreateCouponEndToEndTest.java).
+Oczywiście w taki sposób nie testuje się relacji między usługami, ten test jest tylko po to, żeby sprawdzić, czy udało się wykonać zadanie.
 
-Moduł lojalnościowy nie może korzystać z żadnych elementów modułu kuponów, a moduł kuponów może korzystać tylko z [LoyaltyFacade](./src/main/java/pl/punktozaur/loyalty/LoyaltyFacade.java).
-
-Istnieją już testy architektoniczne, które sprawdzą poprawność implementacji – jeśli wszystko zostanie zaimplementowane prawidłowo, testy będą zielone.
-[Testy architektury](./src/test/java/pl/punktozaur/architecture/ArchitectureTest.java)
-
-Oczywiście, po wprowadzeniu tych zmian wszystkie pozostałe testy po Rest API rowież powinny przejść.
-Do weryfikacji relacji między modułami służy test [End to End](./src/test/java/pl/punktozaur/CreateCouponEndToEndTest.java).
+Do twojej dyspozycji jest kolekcja Postman, żeby poweryfikować różne scenariusze.
 
 ### Powodzenia!
