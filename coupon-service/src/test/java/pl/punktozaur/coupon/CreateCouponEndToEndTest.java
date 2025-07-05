@@ -28,11 +28,11 @@ class CreateCouponEndToEndTest {
     @DisplayName("""
             Full integration test:
             1. Create customer
-            2. Wait for loyalty account creation (async via Kafka)
+            2. Wait for loyalty account creation
             3. Verify loyalty account exists
             4. Add 200 points
             5. Create TEN coupon (100 points required)
-            6. Wait for points deduction (async via Kafka)
+            6. Wait for points deduction
             7. Verify loyalty account has 100 points (200 - 100)
             """)
     void shouldCreateCustomerLoyaltyAccountAddPointsCreateCouponAndVerifyPointsDeduction() {
