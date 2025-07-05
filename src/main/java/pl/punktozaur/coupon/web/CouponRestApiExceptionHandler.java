@@ -5,13 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.punktozaur.common.ApiErrorResponse;
 import pl.punktozaur.coupon.application.exception.CouponNotFoundException;
 import pl.punktozaur.coupon.application.exception.PointsNotSubtractedException;
 import pl.punktozaur.coupon.domain.exception.CouponNotActiveException;
 import pl.punktozaur.coupon.domain.exception.UnauthorizedCouponAccessException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class CouponRestApiExceptionHandler {
 
     @ExceptionHandler(value = CouponNotFoundException.class)
