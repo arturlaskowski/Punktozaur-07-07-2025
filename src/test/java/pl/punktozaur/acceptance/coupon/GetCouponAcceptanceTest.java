@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.common.ApiErrorResponse;
 import pl.punktozaur.coupon.application.CouponService;
@@ -15,8 +16,11 @@ import pl.punktozaur.coupon.application.dto.CreateCouponDto;
 import pl.punktozaur.coupon.domain.CouponId;
 import pl.punktozaur.coupon.domain.NominalValue;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(TestConfig.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GetCouponAcceptanceTest {
 
@@ -26,8 +30,6 @@ class GetCouponAcceptanceTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private FixtureCouponAcceptance fixture;
 
     @Autowired
     private CouponService couponService;
@@ -39,7 +41,7 @@ class GetCouponAcceptanceTest {
             then return coupon details and HTTP 200 status""")
     void givenExistingCouponId_whenRequestIsSent_thenCouponDetailsReturnedAndHttp200() {
         //given
-        var loyaltyAccountId = fixture.createLoyaltyAccountWithPoints();
+        UUID loyaltyAccountId = UUID.randomUUID();
         var couponId = couponService.createCoupon(new CreateCouponDto(loyaltyAccountId, NominalValue.TWENTY));
 
         //when

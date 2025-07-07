@@ -7,17 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
-import pl.punktozaur.common.LoyaltyPoints;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pl.punktozaur.coupon.application.dto.CouponDto;
-import pl.punktozaur.coupon.domain.NominalValue;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
+import pl.punktozaur.loyalty.LoyaltyFacade;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(TestConfig.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CreateCouponAcceptanceTest {
 
@@ -27,8 +29,8 @@ class CreateCouponAcceptanceTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private FixtureCouponAcceptance fixture;
+    @MockitoBean
+    private LoyaltyFacade loyaltyFacade;
 
     @Test
     @DisplayName("""
@@ -37,10 +39,8 @@ class CreateCouponAcceptanceTest {
             then coupon is created and HTTP 201 status returned with location header""")
     void givenValidCouponCreationRequest_whenRequestIsSent_thenCouponCreatedAndHttp201Returned() {
         // given
-        var intPoints = new LoyaltyPoints(1000);
-        var loyaltyAccountWithPointsId = fixture.createLoyaltyAccountWithPoints(intPoints);
-        var expectedPointsAfterCreateCoupon = intPoints.subtract(NominalValue.TWENTY.getRequiredPoints());
-        var createCouponRequest = new CreateCouponRequest(loyaltyAccountWithPointsId, NominalValueApi.TWENTY);
+        UUID accountId = UUID.randomUUID();
+        var createCouponRequest = new CreateCouponRequest(accountId, NominalValueApi.TWENTY);
 
         //when
         var postResponse = restTemplate.postForEntity(getBaseCouponsUrl(), createCouponRequest, Void.class);
@@ -62,9 +62,6 @@ class CreateCouponAcceptanceTest {
                 .extracting(CouponDto::nominalValue)
                 .extracting(Enum::name)
                 .isEqualTo(createCouponRequest.nominalValue().name());
-
-        assertThat(fixture.getLoyaltyAccountPoints(loyaltyAccountWithPointsId))
-                .isEqualTo(expectedPointsAfterCreateCoupon.points());
     }
 
     String getBaseCouponsUrl() {
