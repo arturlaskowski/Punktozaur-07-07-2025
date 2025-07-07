@@ -4,7 +4,8 @@ import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
-import pl.punktozaur.loyalty.LoyaltyFacade;
+import pl.punktozaur.coupon.web.CouponController;
+import pl.punktozaur.loyalty.application.LoyaltyFacade;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
@@ -52,5 +53,17 @@ class ArchitectureTest {
                         && !input.isAssignableFrom(LoyaltyFacade.class);
             }
         };
+    }
+
+    @Test
+    void couponControllerShouldBeIndependentOfCouponService() {
+        var importedClasses = new ClassFileImporter().importPackages("pl.punktozaur.coupon");
+
+        var rule = noClasses()
+                .that().areAssignableTo(CouponController.class)
+                .should().dependOnClassesThat().haveSimpleNameEndingWith("CouponService")
+               .because("With the Mediator pattern, CouponController does not depend directly on CouponService.");
+
+        rule.check(importedClasses);
     }
 }

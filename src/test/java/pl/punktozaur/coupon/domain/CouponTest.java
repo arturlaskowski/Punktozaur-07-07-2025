@@ -1,7 +1,7 @@
 package pl.punktozaur.coupon.domain;
 
 import org.junit.jupiter.api.Test;
-import pl.punktozaur.common.LoyaltyAccountId;
+import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.coupon.domain.exception.CouponNotActiveException;
 import pl.punktozaur.coupon.domain.exception.UnauthorizedCouponAccessException;
 

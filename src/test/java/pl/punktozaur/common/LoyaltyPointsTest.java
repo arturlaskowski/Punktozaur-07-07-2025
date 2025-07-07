@@ -1,6 +1,7 @@
 package pl.punktozaur.common;
 
 import org.junit.jupiter.api.Test;
+import pl.punktozaur.common.domain.LoyaltyPoints;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -1,7 +1,7 @@
 package pl.punktozaur.coupon.domain;
 
 import lombok.Getter;
-import pl.punktozaur.common.LoyaltyPoints;
+import pl.punktozaur.common.domain.LoyaltyPoints;
 
 
 @Getter

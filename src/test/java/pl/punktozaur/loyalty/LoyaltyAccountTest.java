@@ -1,7 +1,10 @@
 package pl.punktozaur.loyalty;
 
 import org.junit.jupiter.api.Test;
-import pl.punktozaur.common.LoyaltyPoints;
+import pl.punktozaur.common.domain.LoyaltyPoints;
+import pl.punktozaur.loyalty.application.exception.InsufficientPointsException;
+import pl.punktozaur.loyalty.domain.CustomerId;
+import pl.punktozaur.loyalty.domain.LoyaltyAccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

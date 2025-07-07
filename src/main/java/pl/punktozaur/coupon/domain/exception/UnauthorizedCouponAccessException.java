@@ -1,6 +1,6 @@
 package pl.punktozaur.coupon.domain.exception;
 
-import pl.punktozaur.common.LoyaltyAccountId;
+import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.coupon.domain.CouponId;
 
 public class UnauthorizedCouponAccessException extends RuntimeException {

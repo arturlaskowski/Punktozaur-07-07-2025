@@ -1,21 +1,9 @@
-# punktozaur - Zadanie 1
+Zaimplementuj wzorzec architektoniczny CQRS w domenie Coupon, wykorzystując wzorzec Mediator, tak aby
+[CouponController](src/main/java/pl/punktozaur/coupon/web/CouponController.java) tworzył komendy (command) i wysyłał je do mediatora.
+Mediator ma za zadanie delegować te komendy do odpowiednich command handlerów.
+Przykład implementacji znajdziesz w projekcie `kopytka` na branchu `cqrs-command-handler`.
 
-Punktozaur to aplikacja, która pozwala zbierać punkty lojalnościowe i wymieniać je na kupony rabatowe.
+W testach architektury [ArchitectureTest](src/test/java/pl/punktozaur/architecture/ArchitectureTest.java) weryfikowane jest, czy `CouponController` nie ma zależności do `CouponService`.
+Po tej implementacji obserwowane zachowanie aplikacji (request/response) nie powinno się zmienić. W testach może być konieczne dostosowanie DTO wykorzystywanych w metodach pomocniczych oraz zmiana wywołań z serwisów na handlery.
 
-## Zadanie
-
-Twoim zadaniem jest oddzielenie modułu lojalnościowego (loyalty) od modułu kuponów (coupon).
-Po wykonaniu zadania powinny istnieć pakiety:
-* [pl.punktozaur.coupon](./src/main/java/pl/punktozaur/coupon)
-* [pl.punktozaur.loyalty](./src/main/java/pl/punktozaur/loyalty) (został już stworzony)
-* [pl.punktozaur.common](./src/main/java/pl/punktozaur/common) (tu powinny trafić tylko `ApiErrorResponse` i klasa z `@RestControllerAdvice`)
-
-Moduł lojalnościowy nie może korzystać z żadnych elementów modułu kuponów, a moduł kuponów może korzystać tylko z [LoyaltyFacade](./src/main/java/pl/punktozaur/loyalty/LoyaltyFacade.java).
-
-Istnieją już testy architektoniczne, które sprawdzą poprawność implementacji – jeśli wszystko zostanie zaimplementowane prawidłowo, testy będą zielone.
-[Testy architektury](./src/test/java/pl/punktozaur/architecture/ArchitectureTest.java)
-
-Oczywiście, po wprowadzeniu tych zmian wszystkie pozostałe testy po Rest API rowież powinny przejść.
-Do weryfikacji relacji między modułami służy test [End to End](./src/test/java/pl/punktozaur/CreateCouponEndToEndTest.java).
-
-### Powodzenia!
+Powodzenia!

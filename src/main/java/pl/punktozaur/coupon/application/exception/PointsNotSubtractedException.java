@@ -1,6 +1,6 @@
 package pl.punktozaur.coupon.application.exception;
 
-import pl.punktozaur.common.LoyaltyAccountId;
+import pl.punktozaur.common.domain.LoyaltyAccountId;
 
 public class PointsNotSubtractedException extends RuntimeException {
 

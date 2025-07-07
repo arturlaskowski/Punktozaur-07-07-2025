@@ -1,6 +1,5 @@
 package pl.punktozaur;
 
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +9,15 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import pl.punktozaur.common.ApiErrorResponse;
-import pl.punktozaur.common.LoyaltyPoints;
+import pl.punktozaur.common.domain.LoyaltyPoints;
+import pl.punktozaur.common.web.ApiErrorResponse;
 import pl.punktozaur.coupon.application.dto.CouponDto;
 import pl.punktozaur.coupon.domain.NominalValue;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
-import pl.punktozaur.loyalty.CreateLoyaltyAccountDto;
-import pl.punktozaur.loyalty.LoyaltyAccountDto;
-import pl.punktozaur.loyalty.ModifyPointsRequest;
+import pl.punktozaur.loyalty.application.dto.CreateLoyaltyAccountDto;
+import pl.punktozaur.loyalty.application.dto.LoyaltyAccountDto;
+import pl.punktozaur.loyalty.web.dto.ModifyPointsDto;
 
 import java.util.UUID;
 
@@ -56,7 +55,7 @@ class CreateCouponEndToEndTest {
 
         // Arrange: add points to the loyalty account
         var initialPoints = new LoyaltyPoints(1000);
-        var addPointsRequest = new ModifyPointsRequest(initialPoints.points());
+        var addPointsRequest = new ModifyPointsDto(initialPoints.points());
 
         // Act: send request to add points
         var addPointsResponse = restTemplate.exchange(
@@ -155,7 +154,7 @@ class CreateCouponEndToEndTest {
         // Act: try to create coupon (should fail)
         var createCouponResponse = restTemplate.postForEntity(getBaseCouponsUrl(), createCouponRequest, ApiErrorResponse.class);
 
-        // Assert: coupon creation is rejected with 400 Bad Request
+        // Assert: coupon creation is rejected with 404 NOT FOUND
         assertThat(createCouponResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(createCouponResponse.getBody())
                 .extracting("message")
