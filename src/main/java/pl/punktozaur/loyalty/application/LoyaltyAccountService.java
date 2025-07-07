@@ -3,19 +3,19 @@ package pl.punktozaur.loyalty.application;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.punktozaur.common.domain.CustomerId;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.common.domain.LoyaltyPoints;
 import pl.punktozaur.loyalty.application.dto.CreateLoyaltyAccountDto;
 import pl.punktozaur.loyalty.application.dto.LoyaltyAccountDto;
 import pl.punktozaur.loyalty.application.exception.LoyaltyAccountNotFoundException;
-import pl.punktozaur.common.domain.CustomerId;
 import pl.punktozaur.loyalty.domain.LoyaltyAccount;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class LoyaltyAccountService implements LoyaltyFacade {
+public class LoyaltyAccountService {
 
     private final LoyaltyAccountRepository loyaltyAccountRepository;
 
@@ -39,7 +39,6 @@ public class LoyaltyAccountService implements LoyaltyFacade {
         loyaltyAccountRepository.save(account);
     }
 
-    @Override
     @Transactional
     public void subtractPoints(LoyaltyAccountId id, LoyaltyPoints pointsToSubtract) {
         var account = loyaltyAccountRepository.findById(id).orElseThrow(()

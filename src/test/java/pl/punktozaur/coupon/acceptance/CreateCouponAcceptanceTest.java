@@ -10,7 +10,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
-import pl.punktozaur.common.web.ApiErrorResponse;
 import pl.punktozaur.coupon.query.CouponDto;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
@@ -28,9 +27,6 @@ class CreateCouponAcceptanceTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Autowired
-    private StubLoyaltyFacade stubLoyaltyFacade;
 
     @Test
     @DisplayName("""
@@ -62,36 +58,6 @@ class CreateCouponAcceptanceTest {
                 .extracting(CouponDto::nominalValue)
                 .extracting(Enum::name)
                 .isEqualTo(createCouponRequest.nominalValue().name());
-    }
-
-
-    //Możesz mnie usunąć w zadaniu 4 :)
-    @Test
-    @DisplayName("""
-            given points subtraction fails,
-            when coupon creation request is sent,
-            then HTTP 400 status returned""")
-    void givenPointsSubtractionFails_whenCouponCreationRequestSent_thenHttp400Returned() {
-        // given
-        stubLoyaltyFacade.setShouldFail(true);
-        stubLoyaltyFacade.setFailureMessage("Insufficient points");
-
-        var loyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var createCouponDto = new CreateCouponRequest(loyaltyAccountId, NominalValueApi.TWENTY);
-
-        // when
-        var response = restTemplate.postForEntity(getBaseCouponsUrl(), createCouponDto, ApiErrorResponse.class);
-
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody())
-                .isNotNull()
-                .extracting("message")
-                .asString()
-                .contains("Subtracting points failed");
-
-        // Reset stub for other tests
-        stubLoyaltyFacade.setShouldFail(false);
     }
 
     String getBaseCouponsUrl() {
