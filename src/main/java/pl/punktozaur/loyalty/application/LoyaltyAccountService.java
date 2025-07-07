@@ -8,7 +8,7 @@ import pl.punktozaur.common.domain.LoyaltyPoints;
 import pl.punktozaur.loyalty.application.dto.CreateLoyaltyAccountDto;
 import pl.punktozaur.loyalty.application.dto.LoyaltyAccountDto;
 import pl.punktozaur.loyalty.application.exception.LoyaltyAccountNotFoundException;
-import pl.punktozaur.loyalty.domain.CustomerId;
+import pl.punktozaur.common.domain.CustomerId;
 import pl.punktozaur.loyalty.domain.LoyaltyAccount;
 
 import java.util.List;

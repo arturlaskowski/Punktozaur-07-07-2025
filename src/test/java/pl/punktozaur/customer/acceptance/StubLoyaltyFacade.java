@@ -1,28 +1,20 @@
-package pl.punktozaur.coupon.acceptance;
+package pl.punktozaur.customer.acceptance;
 
 
-import lombok.Setter;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.common.domain.LoyaltyPoints;
 import pl.punktozaur.loyalty.application.LoyaltyFacade;
 import pl.punktozaur.loyalty.application.dto.CreateLoyaltyAccountDto;
 
-@Setter
 class StubLoyaltyFacade implements LoyaltyFacade {
-
-    private boolean shouldFail = false;
-    private String failureMessage = "Points subtraction failed";
 
     @Override
     public LoyaltyAccountId addAccount(CreateLoyaltyAccountDto createDto) {
-        return null; //Not use in coupon module.
+        return LoyaltyAccountId.newOne();
     }
 
     @Override
     public void subtractPoints(LoyaltyAccountId loyaltyAccountId, LoyaltyPoints requiredPoints) {
-        if (shouldFail) {
-            throw new RuntimeException(failureMessage);
-        }
-        // Simulate success
+        //Not use in customer module.
     }
 }

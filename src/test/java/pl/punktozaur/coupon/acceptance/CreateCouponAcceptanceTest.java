@@ -64,6 +64,8 @@ class CreateCouponAcceptanceTest {
                 .isEqualTo(createCouponRequest.nominalValue().name());
     }
 
+
+    //Możesz mnie usunąć w zadaniu 4 :)
     @Test
     @DisplayName("""
             given points subtraction fails,

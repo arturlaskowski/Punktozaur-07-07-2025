@@ -1,4 +1,4 @@
-package pl.punktozaur.loyalty.domain;
+package pl.punktozaur.common.domain;
 
 import jakarta.persistence.Embeddable;
 

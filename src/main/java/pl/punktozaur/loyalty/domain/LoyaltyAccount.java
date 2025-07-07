@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.punktozaur.common.domain.CustomerId;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.common.domain.LoyaltyPoints;
 import pl.punktozaur.loyalty.application.exception.InsufficientPointsException;
