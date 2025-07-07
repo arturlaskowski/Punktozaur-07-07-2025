@@ -29,11 +29,15 @@ public class Coupon {
     @Version
     private int version;
 
-    public Coupon(LoyaltyAccountId loyaltyAccountId, NominalValue nominalValue) {
-        this.id = CouponId.newOne();
+    public Coupon(CouponId couponId, LoyaltyAccountId loyaltyAccountId, NominalValue nominalValue) {
+        this.id = couponId;
         this.loyaltyAccountId = loyaltyAccountId;
         this.nominalValue = nominalValue;
         this.active = true;
+    }
+
+    public Coupon(LoyaltyAccountId loyaltyAccountId, NominalValue nominalValue) {
+        this(CouponId.newOne(), loyaltyAccountId, nominalValue);
     }
 
     public void redeem(LoyaltyAccountId loyaltyAccountId) {

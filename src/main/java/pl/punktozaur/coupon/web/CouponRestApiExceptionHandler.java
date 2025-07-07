@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.punktozaur.common.web.ApiErrorResponse;
-import pl.punktozaur.coupon.application.exception.CouponNotFoundException;
-import pl.punktozaur.coupon.application.exception.PointsNotSubtractedException;
+import pl.punktozaur.coupon.command.CouponNotFoundException;
+import pl.punktozaur.coupon.command.redeem.PointsNotSubtractedException;
 import pl.punktozaur.coupon.domain.exception.CouponNotActiveException;
 import pl.punktozaur.coupon.domain.exception.UnauthorizedCouponAccessException;
 

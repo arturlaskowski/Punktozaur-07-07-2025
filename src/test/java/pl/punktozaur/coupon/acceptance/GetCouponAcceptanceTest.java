@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.common.web.ApiErrorResponse;
-import pl.punktozaur.coupon.application.CouponService;
-import pl.punktozaur.coupon.application.dto.CouponDto;
-import pl.punktozaur.coupon.application.dto.CreateCouponDto;
+import pl.punktozaur.coupon.command.create.CouponCreateCommand;
+import pl.punktozaur.coupon.command.create.CouponCreateHandler;
 import pl.punktozaur.coupon.domain.CouponId;
 import pl.punktozaur.coupon.domain.NominalValue;
+import pl.punktozaur.coupon.query.CouponDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +30,7 @@ class GetCouponAcceptanceTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private CouponService couponService;
+    private CouponCreateHandler couponCreateHandler;
 
     @Test
     @DisplayName("""
@@ -39,8 +39,9 @@ class GetCouponAcceptanceTest {
             then return coupon details and HTTP 200 status""")
     void givenExistingCouponId_whenRequestIsSent_thenCouponDetailsReturnedAndHttp200() {
         //given
-        var loyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var couponId = couponService.createCoupon(new CreateCouponDto(loyaltyAccountId, NominalValue.TWENTY));
+        var couponId = CouponId.newOne();
+        var loyaltyAccountId = LoyaltyAccountId.newOne();
+        couponCreateHandler.handle(new CouponCreateCommand(couponId, loyaltyAccountId, NominalValue.TWENTY));
 
         //when
         var response = restTemplate.getForEntity(
@@ -52,7 +53,7 @@ class GetCouponAcceptanceTest {
                 .isNotNull()
                 .hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("id", couponId.id())
-                .hasFieldOrPropertyWithValue("loyaltyAccountId", loyaltyAccountId)
+                .hasFieldOrPropertyWithValue("loyaltyAccountId", loyaltyAccountId.id())
                 .hasFieldOrPropertyWithValue("nominalValue", NominalValue.TWENTY)
                 .hasFieldOrPropertyWithValue("isActive", true);
     }

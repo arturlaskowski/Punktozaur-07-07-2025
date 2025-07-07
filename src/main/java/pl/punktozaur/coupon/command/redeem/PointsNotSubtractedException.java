@@ -1,4 +1,4 @@
-package pl.punktozaur.coupon.application.exception;
+package pl.punktozaur.coupon.command.redeem;
 
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.common.web.ApiErrorResponse;
-import pl.punktozaur.coupon.application.dto.CouponDto;
+import pl.punktozaur.coupon.query.CouponDto;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
 

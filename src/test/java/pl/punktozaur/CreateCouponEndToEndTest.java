@@ -1,5 +1,6 @@
 package pl.punktozaur;
 
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.common.domain.LoyaltyPoints;
 import pl.punktozaur.common.web.ApiErrorResponse;
-import pl.punktozaur.coupon.application.dto.CouponDto;
 import pl.punktozaur.coupon.domain.NominalValue;
+import pl.punktozaur.coupon.query.CouponDto;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
 import pl.punktozaur.loyalty.application.dto.CreateLoyaltyAccountDto;

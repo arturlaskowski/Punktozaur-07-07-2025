@@ -1,4 +1,4 @@
-package pl.punktozaur.coupon.application.exception;
+package pl.punktozaur.coupon.command;
 
 import pl.punktozaur.coupon.domain.CouponId;
 

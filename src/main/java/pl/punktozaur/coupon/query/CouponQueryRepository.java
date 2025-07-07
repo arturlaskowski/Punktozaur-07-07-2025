@@ -1,8 +1,8 @@
-package pl.punktozaur.coupon.application.repository;
+package pl.punktozaur.coupon.query;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.punktozaur.coupon.domain.Coupon;
 import pl.punktozaur.coupon.domain.CouponId;
 
-public interface CouponRepository extends JpaRepository<Coupon, CouponId> {
+public interface CouponQueryRepository extends JpaRepository<Coupon, CouponId> {
 }

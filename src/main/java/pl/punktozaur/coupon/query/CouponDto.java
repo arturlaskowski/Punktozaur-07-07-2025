@@ -1,4 +1,4 @@
-package pl.punktozaur.coupon.application.dto;
+package pl.punktozaur.coupon.query;
 
 
 import pl.punktozaur.coupon.domain.NominalValue;

@@ -12,11 +12,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 import pl.punktozaur.common.web.ApiErrorResponse;
-import pl.punktozaur.coupon.application.CouponService;
-import pl.punktozaur.coupon.application.dto.CreateCouponDto;
-import pl.punktozaur.coupon.application.dto.RedeemCouponDto;
+import pl.punktozaur.coupon.command.create.CouponCreateCommand;
+import pl.punktozaur.coupon.command.create.CouponCreateHandler;
+import pl.punktozaur.coupon.command.redeem.CouponRedeemCommand;
+import pl.punktozaur.coupon.command.redeem.CouponRedeemHandler;
 import pl.punktozaur.coupon.domain.CouponId;
 import pl.punktozaur.coupon.domain.NominalValue;
+import pl.punktozaur.coupon.query.CouponQueryService;
+import pl.punktozaur.coupon.web.dto.RedeemCouponRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +34,13 @@ class RedemptionCouponAcceptanceTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private CouponService couponService;
+    private CouponQueryService couponQueryService;
+
+    @Autowired
+    private CouponCreateHandler createCouponHandler;
+
+    @Autowired
+    private CouponRedeemHandler couponRedeemHandler;
 
     @Test
     @DisplayName("""
@@ -40,9 +49,10 @@ class RedemptionCouponAcceptanceTests {
             then HTTP 204 status received""")
     void givenRequestToRedeemValidCoupon_whenRequestIsSent_thenHttp204Received() {
         //given
-        var loyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var couponId = couponService.createCoupon(new CreateCouponDto(loyaltyAccountId, NominalValue.TWENTY));
-        var redeemCouponRequest = new RedeemCouponDto(loyaltyAccountId);
+        var couponId = CouponId.newOne();
+        var loyaltyAccountId = LoyaltyAccountId.newOne();
+        createCouponHandler.handle(new CouponCreateCommand(couponId, loyaltyAccountId, NominalValue.TWENTY));
+        var redeemCouponRequest = new RedeemCouponRequest(loyaltyAccountId.id());
 
         // when
         var response = restTemplate.exchange(
@@ -53,12 +63,12 @@ class RedemptionCouponAcceptanceTests {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        var coupon = couponService.getCoupon(couponId);
+        var coupon = couponQueryService.getCoupon(couponId);
         assertThat(coupon)
                 .isNotNull()
                 .hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("id", couponId.id())
-                .hasFieldOrPropertyWithValue("loyaltyAccountId", loyaltyAccountId)
+                .hasFieldOrPropertyWithValue("loyaltyAccountId", loyaltyAccountId.id())
                 .hasFieldOrPropertyWithValue("nominalValue", NominalValue.TWENTY)
                 .hasFieldOrPropertyWithValue("active", false);
     }
@@ -70,8 +80,8 @@ class RedemptionCouponAcceptanceTests {
             then HTTP 404 status received""")
     void givenRequestToRedeemCouponForNonExistentCoupon_whenRequestIsSent_thenHttp404Received() {
         //given
-        var loyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var redeemCouponRequest = new RedeemCouponDto(loyaltyAccountId);
+        var loyaltyAccountId = LoyaltyAccountId.newOne();
+        var redeemCouponRequest = new RedeemCouponRequest(loyaltyAccountId.id());
         var nonExistentCouponId = CouponId.newOne();
 
         // when
@@ -98,10 +108,11 @@ class RedemptionCouponAcceptanceTests {
             then receive HTTP 409 Conflict""")
     void givenCouponIsNotActive_whenRedeemAttemptIsMade_thenReceiveHttp409Conflict() {
         //given
-        var loyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var couponId = couponService.createCoupon(new CreateCouponDto(loyaltyAccountId, NominalValue.TWENTY));
-        var redeemCouponRequest = new RedeemCouponDto(loyaltyAccountId);
-        couponService.redeemCoupon(couponId, redeemCouponRequest);
+        var couponId = CouponId.newOne();
+        var loyaltyAccountId = LoyaltyAccountId.newOne();
+        createCouponHandler.handle(new CouponCreateCommand(couponId, loyaltyAccountId, NominalValue.TWENTY));
+        couponRedeemHandler.handle(new CouponRedeemCommand(couponId, loyaltyAccountId));
+        var redeemCouponRequest = new RedeemCouponRequest(loyaltyAccountId.id());
 
         // when
         var response = restTemplate.exchange(
@@ -127,10 +138,11 @@ class RedemptionCouponAcceptanceTests {
             then receive HTTP 403 Forbidden""")
     void givenCouponDoesNotBelongToLoyaltyAccount_whenRedeemAttemptIsMade_thenReceiveHttp403Forbidden() {
         //given
-        var ownerLoyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var nonOwnerLoyaltyAccountId = LoyaltyAccountId.newOne().id();
-        var couponId = couponService.createCoupon(new CreateCouponDto(ownerLoyaltyAccountId, NominalValue.TWENTY));
-        var redeemCouponRequest = new RedeemCouponDto(nonOwnerLoyaltyAccountId);
+        var couponId = CouponId.newOne();
+        var ownerLoyaltyAccountId = LoyaltyAccountId.newOne();
+        var nonOwnerLoyaltyAccountId = LoyaltyAccountId.newOne();
+        createCouponHandler.handle(new CouponCreateCommand(couponId, ownerLoyaltyAccountId, NominalValue.TWENTY));
+        var redeemCouponRequest = new RedeemCouponRequest(nonOwnerLoyaltyAccountId.id());
 
         // when
         var response = restTemplate.exchange(
