@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.punktozaur.common.command.CommandHandler;
 import pl.punktozaur.coupon.command.CouponRepository;
-import pl.punktozaur.coupon.command.redeem.PointsNotSubtractedException;
 import pl.punktozaur.coupon.domain.Coupon;
 import pl.punktozaur.loyalty.application.LoyaltyFacade;
 
