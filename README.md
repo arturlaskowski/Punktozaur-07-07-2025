@@ -2,8 +2,8 @@
 
 Używając Feign Client zaimplementuj komunikację synchroniczną między usługami.
 Wymagania są następujące:
-* Podczas tworzenia klienta (endpoint `/coupons`) ma się utworzyć konto lojalnościowe.
-* Podczas tworzenia kuponu mają zostać odjęte punkty z konta lojalnościowego. Jeśli brakuje punktów lub konto nie istnieje, kupon nie może zostać utworzony.
+* Podczas tworzenia klienta (endpoint `/customers`) ma się utworzyć konto lojalnościowe.
+* Podczas tworzenia kuponu (endpoint `/coupons`) mają zostać odjęte punkty z konta lojalnościowego. Jeśli brakuje punktów lub konto nie istnieje, kupon nie może zostać utworzony.
 
 Wszystkie zależności są już dodane, więc nie trzeba nic zmieniać w `pom.xml`.
 Po implementacji pamiętaj o dostosowaniu testów. W testach są klasy `BaseAcceptanceTest`, w nich wystarczy dodać mock dla wywołania zewnętrznej usługi.
