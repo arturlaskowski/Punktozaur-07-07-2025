@@ -11,6 +11,7 @@ import pl.punktozaur.coupon.application.CouponService;
 import pl.punktozaur.coupon.application.dto.CouponDto;
 import pl.punktozaur.coupon.application.dto.CreateCouponDto;
 import pl.punktozaur.coupon.domain.CouponId;
+import pl.punktozaur.coupon.domain.CouponStatus;
 import pl.punktozaur.coupon.domain.NominalValue;
 import pl.punktozaur.domain.LoyaltyAccountId;
 import pl.punktozaur.web.ApiErrorResponse;
@@ -41,11 +42,10 @@ class GetCouponAcceptanceTest extends BaseIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
                 .isNotNull()
-                .hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("id", couponId.id())
                 .hasFieldOrPropertyWithValue("loyaltyAccountId", loyaltyAccountId)
                 .hasFieldOrPropertyWithValue("nominalValue", NominalValue.TWENTY)
-                .hasFieldOrPropertyWithValue("isActive", true);
+                .hasFieldOrPropertyWithValue("status", CouponStatus.PENDING);
     }
 
     @Test

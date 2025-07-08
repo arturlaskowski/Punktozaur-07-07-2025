@@ -24,7 +24,12 @@ public class Coupon {
     @Enumerated(EnumType.STRING)
     private NominalValue nominalValue;
 
-    private boolean active;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private CouponStatus status;
+
+    @Column(length = 2000)
+    private String failureMessage;
 
     @Version
     private int version;
@@ -33,7 +38,26 @@ public class Coupon {
         this.id = CouponId.newOne();
         this.loyaltyAccountId = loyaltyAccountId;
         this.nominalValue = nominalValue;
-        this.active = true;
+        this.status = CouponStatus.PENDING;
+    }
+
+    public void active() {
+        if (this.status != CouponStatus.PENDING) {
+            throw new IllegalStateException("Can only confirm pending coupons");
+        }
+        this.status = CouponStatus.ACTIVE;
+    }
+
+    public void reject(String failureMessage) {
+        if (this.status != CouponStatus.PENDING) {
+            throw new IllegalStateException("Can only reject pending coupons");
+        }
+        this.status = CouponStatus.REJECTED;
+        this.failureMessage = failureMessage;
+    }
+
+    public boolean isActive() {
+        return this.status == CouponStatus.ACTIVE;
     }
 
     public void redeem(LoyaltyAccountId loyaltyAccountId) {
@@ -45,7 +69,7 @@ public class Coupon {
             throw new CouponNotActiveException(this.id);
         }
 
-        this.active = false;
+        this.status = CouponStatus.REDEEMED;
     }
 
     private boolean isOwnedBy(LoyaltyAccountId loyaltyAccountId) {

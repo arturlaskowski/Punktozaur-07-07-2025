@@ -5,12 +5,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.punktozaur.domain.CustomerId;
 import pl.punktozaur.domain.LoyaltyAccountId;
 import pl.punktozaur.domain.LoyaltyPoints;
 import pl.punktozaur.loyalty.application.LoyaltyAccountService;
-import pl.punktozaur.loyalty.application.dto.CreateLoyaltyAccountDto;
 import pl.punktozaur.loyalty.application.dto.LoyaltyAccountDto;
 import pl.punktozaur.loyalty.application.dto.ModifyPointsDto;
 
@@ -23,18 +21,6 @@ import java.util.UUID;
 public class LoyaltyAccountController {
 
     private final LoyaltyAccountService loyaltyAccountService;
-
-    @PostMapping
-    public ResponseEntity<Void> createLoyaltyAccount(@Valid @RequestBody CreateLoyaltyAccountDto request) {
-        var loyaltyAccountId = loyaltyAccountService.addAccount(request);
-
-        var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(loyaltyAccountId.id())
-                .toUri();
-
-        return ResponseEntity.created(location).build();
-    }
 
     @PostMapping("/{id}/add-points")
     public ResponseEntity<Void> addPoints(@PathVariable UUID id, @Valid @RequestBody ModifyPointsDto dto) {

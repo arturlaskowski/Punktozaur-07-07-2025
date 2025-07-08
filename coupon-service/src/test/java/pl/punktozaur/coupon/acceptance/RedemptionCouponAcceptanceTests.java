@@ -12,6 +12,7 @@ import pl.punktozaur.coupon.application.CouponService;
 import pl.punktozaur.coupon.application.dto.CreateCouponDto;
 import pl.punktozaur.coupon.application.dto.RedeemCouponDto;
 import pl.punktozaur.coupon.domain.CouponId;
+import pl.punktozaur.coupon.domain.CouponStatus;
 import pl.punktozaur.coupon.domain.NominalValue;
 import pl.punktozaur.domain.LoyaltyAccountId;
 import pl.punktozaur.web.ApiErrorResponse;
@@ -33,6 +34,8 @@ class RedemptionCouponAcceptanceTests extends BaseIntegrationTest {
         //given
         var loyaltyAccountId = LoyaltyAccountId.newOne().id();
         var couponId = couponService.createCoupon(new CreateCouponDto(loyaltyAccountId, NominalValue.TWENTY));
+        // Simulate saga completion by confirming the coupon
+        couponService.activeCoupon(couponId);
         var redeemCouponRequest = new RedeemCouponDto(loyaltyAccountId);
 
         // when
@@ -47,11 +50,10 @@ class RedemptionCouponAcceptanceTests extends BaseIntegrationTest {
         var coupon = couponService.getCoupon(couponId);
         assertThat(coupon)
                 .isNotNull()
-                .hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("id", couponId.id())
                 .hasFieldOrPropertyWithValue("loyaltyAccountId", loyaltyAccountId)
                 .hasFieldOrPropertyWithValue("nominalValue", NominalValue.TWENTY)
-                .hasFieldOrPropertyWithValue("active", false);
+                .hasFieldOrPropertyWithValue("status", CouponStatus.REDEEMED);
     }
 
     @Test
@@ -91,6 +93,8 @@ class RedemptionCouponAcceptanceTests extends BaseIntegrationTest {
         //given
         var loyaltyAccountId = LoyaltyAccountId.newOne().id();
         var couponId = couponService.createCoupon(new CreateCouponDto(loyaltyAccountId, NominalValue.TWENTY));
+        // Confirm and then redeem to make it inactive
+        couponService.activeCoupon(couponId);
         var redeemCouponRequest = new RedeemCouponDto(loyaltyAccountId);
         couponService.redeemCoupon(couponId, redeemCouponRequest);
 
@@ -121,6 +125,8 @@ class RedemptionCouponAcceptanceTests extends BaseIntegrationTest {
         var ownerLoyaltyAccountId = LoyaltyAccountId.newOne().id();
         var nonOwnerLoyaltyAccountId = LoyaltyAccountId.newOne().id();
         var couponId = couponService.createCoupon(new CreateCouponDto(ownerLoyaltyAccountId, NominalValue.TWENTY));
+        // Confirm the coupon first so it can be redeemed
+        couponService.activeCoupon(couponId);
         var redeemCouponRequest = new RedeemCouponDto(nonOwnerLoyaltyAccountId);
 
         // when

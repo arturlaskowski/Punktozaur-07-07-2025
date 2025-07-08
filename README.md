@@ -1,35 +1,38 @@
-## Zadanie 5
+## Zadanie 6 
 
-Twoim zadaniem jest przesłanie za pośrednictwem Kafki wiadomości podczas tworzenia kuponu z **coupon service** do **loyalty service**, aby odjąć punkty.
+# Zaimplementuj wzorzec Saga dla procesu wydawania kuponu
 
-Wiadomość powinna być wysłana na topic `loyalty-commands` (taki topic jest automatycznie tworzony w [docker-compose](infrastructure/docker-compose.yml)).
+## Happy Path
 
-### Kroki do wykonania
+1. Podczas tworzenia kuponu wysyłana jest komenda do odjęcia punktów.
+2. Po wysłaniu tej komendy tworzony jest kupon w statusie `PENDING`.
+3. Serwis lojalnościowy (Loyalty) odbiera tę komendę i ją przetwarza.
+4. Po pomyślnym odjęciu punktów, Loyalty wysyła event z informacją, że udało się odjąć punkty.
+5. Na ten event nasłuchuje serwis kuponów (Coupon Service) i zmienia status kuponu na `ACTIVE`.  
+   *(Od tej pory kupon może być używany.)*
 
-1. **Zdefiniuj strukturę wiadomości (schemat Avro)**  
-   Schemat należy umieścić w katalogu [src/main/resources/avro](common/src/main/resources/avro).
+## Kompensacja
 
-2. **Wygeneruj klasy Java**  
-   Po zdefiniowaniu schematu Avro, w bibliotece `common` wykonaj polecenie:
-   ```
-   mvn compile
-   ```
-   Spowoduje to automatyczne wygenerowanie klas Java, które mogą być używane zarówno w producerze, jak i listenerze.
+1. Podczas tworzenia kuponu wysyłana jest komenda do odjęcia punktów.
+2. Po wysłaniu tej komendy tworzony jest kupon w statusie `PENDING`.
+3. Serwis lojalnościowy (Loyalty) odbiera tę komendę i ją przetwarza, ale nie udaje się odjąć punktów.
+4. Loyalty wysyła event z informacją, że nie udało się odjąć punktów.
+5. Na ten event nasłuchuje serwis kuponów (Coupon Service) i zmienia status kuponu na `REJECTED`.  
+   *(Kupon nie będzie mógł być używany, ale powinna być dostępna informacja o przyczynie odrzucenia)*
 
-3. **Wyślij wiadomość podczas tworzenia kuponu**  
-   Zaimplementuj wysyłanie wiadomości na topic `loyalty-commands` po utworzeniu kuponu.
+Encja [Coupon](coupon-service/src/main/java/pl/punktozaur/coupon/domain/Coupon.java)  została już dostosowana i zawiera metody oraz statusy, które będą potrzebne do wykonania tego zadania.
 
-4. **Zaktualizuj test akceptacyjny**  
-   Zaktualizuj test akceptacyjny [CreateCouponAcceptanceTest](coupon-service/src/test/java/pl/punktozaur/coupon/acceptance/CreateCouponAcceptanceTest.java), aby weryfikował, czy wiadomość na Kafkę jest wysyłana po stworzeniu kuponu.
+Aby sprawdzić poprawność swojego Sagi, przy uruchomionych wszystkich mikroserwisach uruchom test:
+[Saga Pattern Test](coupon-service/src/test/java/pl/punktozaur/coupon/SagaEndToEndTest.java).
 
-5. **Przetestuj działanie aplikacji**  
-   Skorzystaj z dołączonej [kolekcji Postmana](punktozaur-2.postman_collection.json).
-
----
+Możliwość dodawania konta lojalnościowego przez REST API została usunięta, teraz jest to proces wewnętrzny podczas tworzenia customera.
+Jednak odejmowanie punktów w lojalności może odbywać się także z innych powodów niż wydawanie kuponu (pamiętaj o tym, projektując sagę).
 
 ### Wskazówki
 
-- **Zatrzymaj niepotrzebne kontenery Dockera z projktu kopytka**  
+- **Jeśli chcesz stworzyć nowy topic dodaj go w [docker-compose](infrastructure/docker-compose.yml).**
+
+- **Zatrzymaj niepotrzebne kontenery Dockera z projktu kopytka**
 
 - **Uruchom infrastrukture**  [docker-compose](infrastructure/docker-compose.yml).
 

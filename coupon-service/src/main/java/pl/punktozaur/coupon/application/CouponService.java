@@ -20,7 +20,7 @@ import pl.punktozaur.domain.LoyaltyAccountId;
 public class CouponService {
 
     private final CouponRepository couponRepository;
-    private final SubtractPointsCommandPublisher subtractPointsCommandPublisher;
+    private final LoyaltyCommandPublisher loyaltyCommandPublisher;
 
     @Transactional
     public CouponId createCoupon(CreateCouponDto dto) {
@@ -28,9 +28,19 @@ public class CouponService {
         var coupon = new Coupon(loyaltyAccountId, dto.nominalValue());
         var couponId = couponRepository.save(coupon).getId();
         var points = coupon.getNominalValue().getRequiredPoints();
-        subtractPointsCommandPublisher.publishSubtractPointsCommand(loyaltyAccountId, points);
+        loyaltyCommandPublisher.publishSubtractPointsCommand(loyaltyAccountId, points);
 
+        log.info("Coupon {} created", couponId.id());
         return couponId;
+    }
+
+    @Transactional
+    public void activeCoupon(CouponId couponId) {
+        var coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new CouponNotFoundException(couponId));
+        coupon.active();
+
+        log.info("Coupon {} activated", couponId.id());
     }
 
     @Transactional
@@ -47,6 +57,6 @@ public class CouponService {
                 .orElseThrow(() -> new CouponNotFoundException(id));
 
         return new CouponDto(coupon.getId().id(), coupon.getLoyaltyAccountId().id(),
-                coupon.getNominalValue(), coupon.isActive());
+                coupon.getNominalValue(), coupon.getStatus(), coupon.getFailureMessage());
     }
 }

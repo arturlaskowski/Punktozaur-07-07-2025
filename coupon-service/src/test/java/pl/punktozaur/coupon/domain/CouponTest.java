@@ -20,23 +20,27 @@ class CouponTest {
         assertThat(coupon.getId()).isNotNull();
         assertThat(coupon.getLoyaltyAccountId()).isEqualTo(loyaltyAccountId);
         assertThat(coupon.getNominalValue()).isEqualTo(nominalValue);
-        assertThat(coupon.isActive()).isTrue();
+        assertThat(coupon.getStatus()).isEqualTo(CouponStatus.PENDING);
+        assertThat(coupon.isActive()).isFalse(); // PENDING coupons are not active
     }
 
     @Test
     void shouldRedeemCoupon() {
         var coupon = new Coupon(loyaltyAccountId, NominalValue.TWENTY);
+        coupon.active();
 
         coupon.redeem(loyaltyAccountId);
 
         assertThat(coupon.getLoyaltyAccountId()).isEqualTo(loyaltyAccountId);
         assertThat(coupon.getNominalValue()).isEqualTo(NominalValue.TWENTY);
+        assertThat(coupon.getStatus()).isEqualTo(CouponStatus.REDEEMED);
         assertThat(coupon.isActive()).isFalse();
     }
 
     @Test
     void shouldThrowUnauthorizedCouponAccessExceptionWhenRedeemedByNotOwner() {
         var coupon = new Coupon(loyaltyAccountId, NominalValue.TWENTY);
+        coupon.active(); // Need to confirm first before redeeming
         var notOwnerId = LoyaltyAccountId.newOne();
 
         assertThrows(UnauthorizedCouponAccessException.class,
@@ -46,7 +50,8 @@ class CouponTest {
     @Test
     void shouldThrowCouponNotActiveExceptionWhenRedeemingAnInactiveCoupon() {
         var coupon = new Coupon(loyaltyAccountId, NominalValue.TWENTY);
-        coupon.redeem(loyaltyAccountId);
+        coupon.active(); // Confirm first
+        coupon.redeem(loyaltyAccountId); // Then redeem to make it inactive
 
         assertThrows(CouponNotActiveException.class,
                 () -> coupon.redeem(loyaltyAccountId));

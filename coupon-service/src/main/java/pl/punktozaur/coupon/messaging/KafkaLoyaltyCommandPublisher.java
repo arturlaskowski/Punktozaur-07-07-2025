@@ -3,7 +3,7 @@ package pl.punktozaur.coupon.messaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.punktozaur.avro.loyalty.SubtractPointsCommandAvroModel;
-import pl.punktozaur.coupon.application.SubtractPointsCommandPublisher;
+import pl.punktozaur.coupon.application.LoyaltyCommandPublisher;
 import pl.punktozaur.domain.LoyaltyAccountId;
 import pl.punktozaur.domain.LoyaltyPoints;
 import pl.punktozaur.kafka.config.producer.KafkaProducer;
@@ -12,7 +12,7 @@ import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
-public class LoyaltyCommandPublisher implements SubtractPointsCommandPublisher {
+public class KafkaLoyaltyCommandPublisher implements LoyaltyCommandPublisher {
 
     private final TopicsConfigData topicsConfigData;
     private final KafkaProducer<String, SubtractPointsCommandAvroModel> kafkaProducer;

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import pl.punktozaur.AcceptanceTest;
 import pl.punktozaur.KafkaIntegrationTest;
 import pl.punktozaur.coupon.application.dto.CouponDto;
+import pl.punktozaur.coupon.domain.CouponStatus;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
 import pl.punktozaur.domain.LoyaltyAccountId;
@@ -51,10 +52,9 @@ class CreateCouponAcceptanceTest extends KafkaIntegrationTest {
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getResponse.getBody())
                 .isNotNull()
-                .hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("id", UUID.fromString(couponId))
                 .hasFieldOrPropertyWithValue("loyaltyAccountId", createCouponRequest.loyaltyAccountId())
-                .hasFieldOrPropertyWithValue("isActive", true)
+                .hasFieldOrPropertyWithValue("status", CouponStatus.PENDING)
                 .extracting(CouponDto::nominalValue)
                 .extracting(Enum::name)
                 .isEqualTo(createCouponRequest.nominalValue().name());
