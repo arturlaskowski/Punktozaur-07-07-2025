@@ -1,0 +1,121 @@
+### Variables
+# Service URLs
+@customer_service_url = http://localhost:8581
+@loyalty_service_url = http://localhost:8582
+@coupon_service_url = http://localhost:8583
+
+###
+
+# ===================================
+# CUSTOMER SERVICE ENDPOINTS
+# ===================================
+
+### Customer Service - Add Customer
+POST {{customer_service_url}}/customers
+Content-Type: application/json
+
+{
+  "firstName": "Jan",
+  "lastName": "Kowalski",
+  "email": "jan.kowalski@example.com"
+}
+
+> {%
+  client.test("Extract customerId from Location header", function() {
+    var location = response.headers.valueOf("Location");
+    if (location) {
+      var customerId = location.split('/').pop();
+      client.global.set("customerId", customerId);
+      console.log("Set customerId: " + customerId);
+    }
+  });
+%}
+
+### Customer Service - Get Customer
+GET {{customer_service_url}}/customers/{{customerId}}
+
+###
+
+# ===================================
+# LOYALTY SERVICE ENDPOINTS
+# ===================================
+
+### Loyalty Service - Create Loyalty Account
+POST {{loyalty_service_url}}/loyalty-accounts
+Content-Type: application/json
+
+{
+  "customerId": "{{customerId}}"
+}
+
+> {%
+  client.test("Extract loyaltyAccountId from Location header", function() {
+    var location = response.headers.valueOf("Location");
+    if (location) {
+      var loyaltyAccountId = location.split('/').pop();
+      client.global.set("loyaltyAccountId", loyaltyAccountId);
+      console.log("Set loyaltyAccountId: " + loyaltyAccountId);
+    }
+  });
+%}
+
+### Loyalty Service - Add Points
+POST {{loyalty_service_url}}/loyalty-accounts/{{loyaltyAccountId}}/add-points
+Content-Type: application/json
+
+{
+  "points": 100
+}
+
+### Loyalty Service - Subtract Points
+POST {{loyalty_service_url}}/loyalty-accounts/{{loyaltyAccountId}}/subtract-points
+Content-Type: application/json
+
+{
+  "points": 50
+}
+
+### Loyalty Service - Get Loyalty Account
+GET {{loyalty_service_url}}/loyalty-accounts/{{loyaltyAccountId}}
+
+### Loyalty Service - Get Loyalty Accounts by Customer Id
+GET {{loyalty_service_url}}/loyalty-accounts?customerId={{customerId}}
+
+###
+
+# ===================================
+# COUPON SERVICE ENDPOINTS
+# ===================================
+
+### Coupon Service - Create Coupon
+POST {{coupon_service_url}}/coupons
+Content-Type: application/json
+
+{
+  "loyaltyAccountId": "{{loyaltyAccountId}}",
+  "nominalValue": "TEN"
+}
+
+> {%
+  client.test("Extract couponId from Location header", function() {
+    var location = response.headers.valueOf("Location");
+    if (location) {
+      var couponId = location.split('/').pop();
+      client.global.set("couponId", couponId);
+      console.log("Set couponId: " + couponId);
+    }
+  });
+%}
+
+### Coupon Service - Get Coupon
+GET {{coupon_service_url}}/coupons/{{couponId}}
+
+### Coupon Service - Redeem Coupon
+POST {{coupon_service_url}}/coupons/{{couponId}}/redeem
+Content-Type: application/json
+
+{
+  "loyaltyAccountId": "{{loyaltyAccountId}}"
+}
+
+###
