@@ -20,14 +20,15 @@ import pl.punktozaur.domain.LoyaltyAccountId;
 public class CouponService {
 
     private final CouponRepository couponRepository;
+    private final SubtractPointsCommandPublisher subtractPointsCommandPublisher;
 
     @Transactional
     public CouponId createCoupon(CreateCouponDto dto) {
         var loyaltyAccountId = new LoyaltyAccountId(dto.loyaltyAccountId());
         var coupon = new Coupon(loyaltyAccountId, dto.nominalValue());
         var couponId = couponRepository.save(coupon).getId();
-
-        //TODO
+        var points = coupon.getNominalValue().getRequiredPoints();
+        subtractPointsCommandPublisher.publishSubtractPointsCommand(loyaltyAccountId, points);
 
         return couponId;
     }

@@ -1,0 +1,12 @@
+package pl.punktozaur.coupon.messaging;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "coupon-service.kafka.topics")
+public class TopicsConfigData {
+    private String loyaltyCommand;
+}

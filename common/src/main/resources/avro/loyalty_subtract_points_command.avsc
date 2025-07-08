@@ -1,0 +1,25 @@
+{
+  "namespace": "pl.punktozaur.avro.loyalty",
+  "type": "record",
+  "name": "SubtractPointsCommandAvroModel",
+  "fields": [
+    {
+      "name": "loyaltyAccountId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "points",
+      "type": "int"
+    },
+    {
+      "name": "createdAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

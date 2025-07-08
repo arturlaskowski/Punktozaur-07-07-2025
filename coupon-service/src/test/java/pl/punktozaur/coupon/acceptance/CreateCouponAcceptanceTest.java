@@ -1,22 +1,32 @@
 package pl.punktozaur.coupon.acceptance;
 
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import pl.punktozaur.AcceptanceTest;
-import pl.punktozaur.BaseIntegrationTest;
+import pl.punktozaur.KafkaIntegrationTest;
 import pl.punktozaur.coupon.application.dto.CouponDto;
 import pl.punktozaur.coupon.web.dto.CreateCouponRequest;
 import pl.punktozaur.coupon.web.dto.NominalValueApi;
 import pl.punktozaur.domain.LoyaltyAccountId;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AcceptanceTest
-class CreateCouponAcceptanceTest extends BaseIntegrationTest {
+@AcceptanceTest(topics = CreateCouponAcceptanceTest.LOYALTY_COMMAND_TOPIC)
+class CreateCouponAcceptanceTest extends KafkaIntegrationTest {
+
+    static final String LOYALTY_COMMAND_TOPIC = "loyalty-commands";
+
+    @BeforeEach
+    void setUp() {
+        setupKafkaConsumer(LOYALTY_COMMAND_TOPIC);
+    }
 
     @Test
     @DisplayName("""
@@ -48,6 +58,12 @@ class CreateCouponAcceptanceTest extends BaseIntegrationTest {
                 .extracting(CouponDto::nominalValue)
                 .extracting(Enum::name)
                 .isEqualTo(createCouponRequest.nominalValue().name());
+
+        // Verify that command was sent to Kafka
+        ConsumerRecord<String, String> customerEvent = records.poll(5, TimeUnit.SECONDS);
+        assertThat(customerEvent).isNotNull();
+        assertThat(customerEvent.topic()).isEqualTo(LOYALTY_COMMAND_TOPIC);
+        assertThat(customerEvent.key()).isEqualTo((createCouponRequest.loyaltyAccountId().toString()));
 
     }
 
