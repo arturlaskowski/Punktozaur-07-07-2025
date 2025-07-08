@@ -1,4 +1,4 @@
-package pl.punktozaur.coupon.command.redeem;
+package pl.punktozaur.coupon.command.create;
 
 import pl.punktozaur.common.domain.LoyaltyAccountId;
 
