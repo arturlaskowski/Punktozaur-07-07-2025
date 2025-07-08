@@ -1,30 +1,45 @@
-## Zadanie 4
+## Zadanie 5
 
-Wykorzystaj mechanizm messagingu wbudowany w Spring (`ApplicationEventPublisher`) (jest to messaging, który domyślnie opiera się na pamięci aplikacji, domyślnie działa synchronicznie. Dzięki adnotacji `@Async` można zmienić na podejście asynchroniczne, ale zrobimy to w kolejnym zadaniu z użyciem brokera wiadomości).
+Twoim zadaniem jest przesłanie za pośrednictwem Kafki wiadomości podczas tworzenia kuponu z **coupon service** do **loyalty service**, aby odjąć punkty.
 
-Zadbaj, aby wszystkie moduły były luźno powiązane (bezpośdenio z sobą nie rozmaiwały).
-Zostanie to zweryfikowane przez [Testy Architektoniczne](src/test/java/pl/punktozaur/architecture/ArchitectureTest.java).
+Wiadomość powinna być wysłana na topic `loyalty-commands` (taki topic jest automatycznie tworzony w [docker-compose](infrastructure/docker-compose.yml)).
 
-Zastąp obecną implementację messagingiem.
-Klasy `...Facade` powinny zostać usunięte. 
+### Kroki do wykonania
 
-Po utworzeniu Customera nadal powinno być tworzone konto lojalnościowe, a przy tworzeniu kuponu powinny być odejmowane punkty z konta lojalnościowego.
-Obserwowalne zachowanie aplikacji się nie zmienia.
+1. **Zdefiniuj strukturę wiadomości (schemat Avro)**  
+   Schemat należy umieścić w katalogu [src/main/resources/avro](common/src/main/resources/avro).
 
-Zostanie to zweryfikowane przez [Testy End to End](src/test/java/pl/punktozaur/CreateCouponEndToEndTest.java).
+2. **Wygeneruj klasy Java**  
+   Po zdefiniowaniu schematu Avro, w bibliotece `common` wykonaj polecenie:
+   ```
+   mvn compile
+   ```
+   Spowoduje to automatyczne wygenerowanie klas Java, które mogą być używane zarówno w producerze, jak i listenerze.
 
+3. **Wyślij wiadomość podczas tworzenia kuponu**  
+   Zaimplementuj wysyłanie wiadomości na topic `loyalty-commands` po utworzeniu kuponu.
 
-W konfiguracji testów akceptacyjnych zamiast stubowania fasady, zastąp ją stubem dla `ApplicationEventPublisher`.
-```java
-@TestConfiguration
-class CustomerTestConfig {
+4. **Zaktualizuj test akceptacyjny**  
+   Zaktualizuj test akceptacyjny [CreateCouponAcceptanceTest](coupon-service/src/test/java/pl/punktozaur/coupon/acceptance/CreateCouponAcceptanceTest.java), aby weryfikował, czy wiadomość na Kafkę jest wysyłana po stworzeniu kuponu.
 
-    @Bean
-    @Primary
-    public ApplicationEventPublisher applicationEventPublisher() {
-        ApplicationEventPublisher publisher = Mockito.mock(ApplicationEventPublisher.class);
-        doNothing().when(publisher).publishEvent(CustomerCreatedEvent.class);
-        return publisher;
-    }
-}
-```
+5. **Przetestuj działanie aplikacji**  
+   Skorzystaj z dołączonej [kolekcji Postmana](punktozaur-2.postman_collection.json).
+
+---
+
+### Wskazówki
+
+- **Zatrzymaj niepotrzebne kontenery Dockera z projktu kopytka**  
+
+- **Uruchom infrastrukture**  [docker-compose](infrastructure/docker-compose.yml).
+
+- **Czyszczenie danych**  
+  Jeśli chcesz usunąć dane z bazy, topiki z Kafki i ubić wszystkie kontenery Docker, użyj skryptu [docker-clean.sh](infrastructure/docker-clean.sh).
+
+- **GUI do Kafki**  
+  Po odpaleniu pod adresem [http://localhost:8080/](http://localhost:8080/) dostępne jest GUI do Kafki z podłączonym Schema Registry. Możesz tam weryfikować, jakie wiadomości pojawiły się na danym topicu.
+
+### Baza danych
+
+Każda baza danych to osobny schemat, co zapewnia separację i oszczędza lokalnie trochę zasobów, a na środowisku wdrożeniowym pozwala używać osobnych baz danych.
+Po zalogowaniu się do bazy jako użytkownik `admin_user` z hasłem `admin_password` (`jdbc:postgresql://localhost:5432/punktozaurdb`), masz dostęp do wszystkich schematów.

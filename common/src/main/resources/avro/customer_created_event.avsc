@@ -1,0 +1,21 @@
+{
+    "namespace": "pl.punktozaur.avro.customer",
+    "type": "record",
+    "name": "CustomerEventAvroModel",
+    "fields": [
+        {
+            "name": "customerId",
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+            }
+        },
+        {
+            "name": "createdAt",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        }
+    ]
+}
