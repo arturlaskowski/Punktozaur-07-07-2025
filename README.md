@@ -13,9 +13,6 @@ Definiuje jak aplikacja ma odpowiadać na żądania opisane w kontraktach.
 
 Następnie utwórz kontrakty.
 
-Twój opis jest bardzo bliski ideału – zawiera kluczowe informacje i poprawne zrozumienie działania Spring Cloud Contract. Wymaga tylko kilku drobnych korekt językowych i doprecyzowań. Oto poprawiona wersja:
-
-
 ## Kontrakty
 `loyalty-service` wystawia API, z którego korzystają `coupon-service` i `customer-service`.
 Kontrakty (np. w formacie `.groovy`) będą znajdować się w `loyalty-service`.
