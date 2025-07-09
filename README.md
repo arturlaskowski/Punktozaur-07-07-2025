@@ -49,7 +49,11 @@ Po zalogowaniu się do bazy jako użytkownik `admin_user` z hasłem `admin_passw
 Po uruchomieniu będzie dostępny pod adresem:  
 http://localhost:5050
 
-Aby się zalogować:
+Aby się zalogować do pgAdmin:
+admin@admin.com
+admin
+
+Aby się zalogować do bazy:
 - **Host address:** postgres
 - **Port:** 5432
 - **Username:** postgres
