@@ -122,6 +122,19 @@ services:
       - kafka
       - schema_registry
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data_punktozaur:/var/lib/pgadmin
+    networks:
+      - postgres_punktozaur
 
 networks:
   postgres_network_punktozaur:
@@ -131,3 +144,4 @@ networks:
 
 volumes:
   postgres_punktozaur:
+  pgadmin-data_punktozaur:

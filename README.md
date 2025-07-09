@@ -43,3 +43,14 @@ Wiadomość powinna być wysłana na topic `loyalty-commands` (taki topic jest a
 
 Każda baza danych to osobny schemat, co zapewnia separację i oszczędza lokalnie trochę zasobów, a na środowisku wdrożeniowym pozwala używać osobnych baz danych.
 Po zalogowaniu się do bazy jako użytkownik `admin_user` z hasłem `admin_password` (`jdbc:postgresql://localhost:5432/punktozaurdb`), masz dostęp do wszystkich schematów.
+
+## PgAdmin
+
+Po uruchomieniu będzie dostępny pod adresem:  
+http://localhost:5050
+
+Aby się zalogować:
+- **Host address:** postgres
+- **Port:** 5432
+- **Username:** postgres
+- **Password:** postgres
