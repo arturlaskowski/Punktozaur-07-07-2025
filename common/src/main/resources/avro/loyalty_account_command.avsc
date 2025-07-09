@@ -1,0 +1,85 @@
+{
+  "namespace": "pl.punktozaur.avro.loyalty",
+  "type": "record",
+  "name": "LoyaltyAccountCommandAvroModel",
+  "fields": [
+    {
+      "name": "type",
+      "type": {
+        "type": "enum",
+        "name": "LoyaltyAccountCommandType",
+        "symbols": [
+          "ADD_POINTS",
+          "SUBTRACT_POINTS"
+        ]
+      }
+    },
+    {
+      "name": "payload",
+      "type": [
+        {
+          "name": "AddPointsAvroCommand",
+          "type": "record",
+          "fields": [
+            {
+              "name": "sagaId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "loyaltyAccountId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "points",
+              "type": "int"
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            }
+          ]
+        },
+        {
+          "name": "SubtractPointsAvroCommand",
+          "type": "record",
+          "fields": [
+            {
+              "name": "sagaId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "loyaltyAccountId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "points",
+              "type": "int"
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

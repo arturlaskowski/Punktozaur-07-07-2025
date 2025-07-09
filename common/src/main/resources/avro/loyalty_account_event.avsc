@@ -1,0 +1,117 @@
+{
+  "namespace": "pl.punktozaur.avro.loyalty",
+  "type": "record",
+  "name": "LoyaltyAccountEventAvroModel",
+  "fields": [
+    {
+      "name": "type",
+      "type": {
+        "type": "enum",
+        "name": "LoyaltyAccountEventType",
+        "symbols": [
+          "POINTS_ADDED",
+          "POINTS_SUBTRACTED",
+          "POINTS_SUBTRACTION_FAILED"
+        ]
+      }
+    },
+    {
+      "name": "payload",
+      "type": [
+        {
+          "name": "PointsAddedAvroEvent",
+          "type": "record",
+          "fields": [
+            {
+              "name": "sagaId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "loyaltyAccountId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "points",
+              "type": "int"
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            }
+          ]
+        },
+        {
+          "name": "PointsSubtractedAvroEvent",
+          "type": "record",
+          "fields": [
+            {
+              "name": "sagaId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "loyaltyAccountId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "points",
+              "type": "int"
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            }
+          ]
+        },
+        {
+          "name": "PointsSubtractionFailedAvroEvent",
+          "type": "record",
+          "fields": [
+            {
+              "name": "sagaId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "loyaltyAccountId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "failureMessages",
+              "type": "string"
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
